@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
-    const { data: appointments = [], error: appointmentsError } = await supabase
+    const { data: appointmentsData, error: appointmentsError } = await supabase
       .from('appointments')
       .select('start_time, end_time')
       .eq('dentist_id', dentistId)
@@ -50,6 +50,8 @@ export async function GET(request: NextRequest) {
     if (appointmentsError) {
       console.error('Error fetching appointments:', appointmentsError);
     }
+
+    const appointments = appointmentsData || [];
 
     // Generate time slots (30-minute intervals)
     const slots: { startTime: string; endTime: string; available: boolean }[] = [];

@@ -365,101 +365,109 @@ export function SchedulingCalendar() {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
       {/* Header Controls */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
+      <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
+        {/* Date Range Text - Mobile First */}
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-center sm:text-left">
+          {getDateRangeText()}
+        </h2>
+
+        {/* Navigation and View Mode Container */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          {/* Navigation Buttons */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={goToPrevious}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="flex-1 sm:flex-none h-10 sm:h-9 px-3 sm:px-4 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 transition-transform"
             >
               Previous
             </button>
             <button
               onClick={goToToday}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600"
+              className="flex-1 sm:flex-none h-10 sm:h-9 px-3 sm:px-4 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 active:scale-95 transition-transform"
             >
               Today
             </button>
             <button
               onClick={goToNext}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="flex-1 sm:flex-none h-10 sm:h-9 px-3 sm:px-4 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 transition-transform"
             >
               Next
             </button>
           </div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {getDateRangeText()}
-          </h2>
-        </div>
 
-        {/* View Mode Selector */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setViewMode('day')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              viewMode === 'day'
-                ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            Day
-          </button>
-          <button
-            onClick={() => setViewMode('week')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              viewMode === 'week'
-                ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            Week
-          </button>
-          <button
-            onClick={() => setViewMode('month')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              viewMode === 'month'
-                ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            Month
-          </button>
+          {/* View Mode Selector */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              onClick={() => setViewMode('day')}
+              className={`flex-1 sm:flex-none h-10 sm:h-9 px-4 sm:px-4 text-sm font-medium rounded-md transition-all active:scale-95 ${
+                viewMode === 'day'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              Day
+            </button>
+            <button
+              onClick={() => setViewMode('week')}
+              className={`flex-1 sm:flex-none h-10 sm:h-9 px-4 sm:px-4 text-sm font-medium rounded-md transition-all active:scale-95 ${
+                viewMode === 'week'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              Week
+            </button>
+            <button
+              onClick={() => setViewMode('month')}
+              className={`flex-1 sm:flex-none h-10 sm:h-9 px-4 sm:px-4 text-sm font-medium rounded-md transition-all active:scale-95 ${
+                viewMode === 'month'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              Month
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Dentist Color Legend */}
       {dentists.length > 0 && (
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-wrap gap-3">
-          {dentists.map((dentist) => (
-            <div key={dentist.id} className="flex items-center gap-2">
-              <div className={`w-4 h-4 rounded ${getDentistColor(dentist.id)}`}></div>
-              <span className="text-sm text-gray-700 dark:text-gray-300">
-                Dr. {dentist.first_name} {dentist.last_name}
-              </span>
-            </div>
-          ))}
+        <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+          <div className="flex flex-wrap gap-2 sm:gap-3 min-w-max sm:min-w-0">
+            {dentists.map((dentist) => (
+              <div key={dentist.id} className="flex items-center gap-2 whitespace-nowrap">
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded ${getDentistColor(dentist.id)}`}></div>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                  Dr. {dentist.first_name} {dentist.last_name}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Calendar Grid */}
-      <div className="overflow-auto" style={{ maxHeight: 'calc(100vh - 380px)' }}>
+      <div className="overflow-auto max-h-[calc(100vh-480px)] sm:max-h-[calc(100vh-420px)] md:max-h-[calc(100vh-380px)]">
         {viewMode === 'day' && (
           <table className="border-collapse w-full">
             <thead className="sticky top-0 bg-gray-50 dark:bg-gray-900 z-20">
               <tr>
-                <th className="sticky left-0 z-30 bg-gray-50 dark:bg-gray-900 border-r border-b border-gray-200 dark:border-gray-700 px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16">
-                  Hour
+                <th className="sticky left-0 z-30 bg-gray-50 dark:bg-gray-900 border-r border-b border-gray-200 dark:border-gray-700 px-1 sm:px-2 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12 sm:w-16">
+                  <span className="hidden sm:inline">Hour</span>
+                  <span className="sm:hidden">Hr</span>
                 </th>
-                <th className="sticky left-16 z-30 bg-gray-50 dark:bg-gray-900 border-r border-b border-gray-200 dark:border-gray-700 px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">
-                  Min
+                <th className="sticky left-12 sm:left-16 z-30 bg-gray-50 dark:bg-gray-900 border-r border-b border-gray-200 dark:border-gray-700 px-1 sm:px-2 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-10 sm:w-12">
+                  <span className="hidden sm:inline">Min</span>
+                  <span className="sm:hidden">M</span>
                 </th>
                 {operatories.map((operatory) => (
                   <th
                     key={operatory.id}
-                    className="border-r border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                    style={{ minWidth: '150px' }}
+                    className="border-r border-b border-gray-200 dark:border-gray-700 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-[120px] sm:min-w-[150px]"
                   >
-                    <div>Operatory {operatory.operatory_number}</div>
+                    <div className="hidden sm:block">Operatory {operatory.operatory_number}</div>
+                    <div className="sm:hidden">Op {operatory.operatory_number}</div>
                   </th>
                 ))}
               </tr>
@@ -490,13 +498,14 @@ export function SchedulingCalendar() {
                     {isFirstInHour ? (
                       <td
                         rowSpan={3}
-                        className="sticky left-0 z-10 bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 px-2 py-0 text-xs text-gray-500 dark:text-gray-400 text-center align-middle font-medium"
+                        className="sticky left-0 z-10 bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 px-1 sm:px-2 py-0 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 text-center align-middle font-medium"
                       >
-                        {formatHour(hour)}
+                        <div className="hidden sm:block">{formatHour(hour)}</div>
+                        <div className="sm:hidden text-[9px]">{formatHour(hour).replace(' ', '')}</div>
                       </td>
                     ) : null}
-                    <td className="sticky left-16 z-10 bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 px-2 py-0 text-xs text-gray-500 dark:text-gray-400 text-center align-top">
-                      <div className="pt-1">
+                    <td className="sticky left-12 sm:left-16 z-10 bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 px-1 sm:px-2 py-0 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 text-center align-top">
+                      <div className="pt-0.5 sm:pt-1">
                         {minute.toString().padStart(2, '0')}
                       </div>
                     </td>
@@ -528,7 +537,7 @@ export function SchedulingCalendar() {
         )}
 
         {viewMode === 'week' && (
-          <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
             {getWeekDays().map((day) => {
               const dayAppointments = appointments.filter((apt) => {
                 const aptDate = new Date(apt.start_time);
@@ -536,13 +545,13 @@ export function SchedulingCalendar() {
               });
 
               return (
-                <div key={day.toISOString()} className="bg-white dark:bg-gray-800 min-h-[500px]">
-                  <div className="sticky top-0 bg-gray-50 dark:bg-gray-900 p-3 border-b border-gray-200 dark:border-gray-700 z-10">
+                <div key={day.toISOString()} className="bg-white dark:bg-gray-800 min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
+                  <div className="sticky top-0 bg-gray-50 dark:bg-gray-900 p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700 z-10">
                     <div className="text-center">
-                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                      <div className="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         {format(day, 'EEE')}
                       </div>
-                      <div className={`text-lg font-semibold mt-1 ${
+                      <div className={`text-base sm:text-lg font-semibold mt-0.5 sm:mt-1 ${
                         format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
                           ? 'text-blue-600 dark:text-blue-400'
                           : 'text-gray-900 dark:text-white'
@@ -550,28 +559,28 @@ export function SchedulingCalendar() {
                         {format(day, 'd')}
                       </div>
                       {dayAppointments.length > 0 && (
-                        <div className="mt-1 inline-block px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium">
-                          {dayAppointments.length} {dayAppointments.length === 1 ? 'appointment' : 'appointments'}
+                        <div className="mt-1 inline-block px-1.5 sm:px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-[10px] sm:text-xs font-medium">
+                          {dayAppointments.length}
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="p-2 space-y-1">
+                  <div className="p-1.5 sm:p-2 space-y-1">
                     {dayAppointments.length === 0 ? (
-                      <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
-                        No appointments
+                      <div className="text-center py-6 sm:py-8 text-gray-400 dark:text-gray-500 text-xs sm:text-sm">
+                        No appts
                       </div>
                     ) : (
                       dayAppointments.map((apt) => (
                         <div
                           key={apt.id}
                           onClick={() => handleEditAppointment(apt)}
-                          className={`p-2 rounded text-xs cursor-pointer hover:shadow-md transition-shadow ${getDentistColor(apt.dentist_id)}`}
+                          className={`p-1.5 sm:p-2 rounded text-[10px] sm:text-xs cursor-pointer hover:shadow-md active:scale-95 transition-all ${getDentistColor(apt.dentist_id)}`}
                         >
                           <div className="font-semibold truncate">
                             {format(new Date(apt.start_time), 'HH:mm')} - {apt.patient.first_name} {apt.patient.last_name}
                           </div>
-                          <div className="opacity-90 truncate text-xs">
+                          <div className="opacity-90 truncate text-[9px] sm:text-xs">
                             Dr. {apt.dentist.last_name}
                           </div>
                         </div>
@@ -587,19 +596,20 @@ export function SchedulingCalendar() {
         {viewMode === 'month' && (
           <div>
             <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
                 <div
                   key={day}
-                  className="bg-gray-50 dark:bg-gray-900 p-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  className="bg-gray-50 dark:bg-gray-900 p-1 sm:p-2 text-center text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
                 >
-                  {day}
+                  <span className="hidden sm:inline">{day}</span>
+                  <span className="sm:hidden">{day.slice(0, 1)}</span>
                 </div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
               {/* Padding cells for days before month starts */}
               {Array.from({ length: startOfMonth(currentDate).getDay() }).map((_, i) => (
-                <div key={`padding-${i}`} className="bg-gray-50 dark:bg-gray-900 min-h-[120px]"></div>
+                <div key={`padding-${i}`} className="bg-gray-50 dark:bg-gray-900 min-h-[80px] sm:min-h-[100px] md:min-h-[120px]"></div>
               ))}
 
               {getMonthDays().map((day) => {
@@ -611,10 +621,10 @@ export function SchedulingCalendar() {
                 return (
                   <div
                     key={day.toISOString()}
-                    className="bg-white dark:bg-gray-800 min-h-[120px] p-2"
+                    className="bg-white dark:bg-gray-800 min-h-[80px] sm:min-h-[100px] md:min-h-[120px] p-1 sm:p-2"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className={`text-sm font-semibold ${
+                    <div className="flex items-start justify-between mb-1 sm:mb-2">
+                      <div className={`text-xs sm:text-sm font-semibold ${
                         format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
                           ? 'text-blue-600 dark:text-blue-400'
                           : 'text-gray-900 dark:text-white'
@@ -622,24 +632,25 @@ export function SchedulingCalendar() {
                         {format(day, 'd')}
                       </div>
                       {dayAppointments.length > 0 && (
-                        <div className="inline-block px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium whitespace-nowrap">
-                          {dayAppointments.length} {dayAppointments.length === 1 ? 'appointment' : 'appointments'}
+                        <div className="inline-block px-1 sm:px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-[9px] sm:text-xs font-medium whitespace-nowrap">
+                          {dayAppointments.length}
                         </div>
                       )}
                     </div>
-                    <div className="space-y-1">
-                      {dayAppointments.slice(0, 3).map((apt) => (
+                    <div className="space-y-0.5 sm:space-y-1">
+                      {dayAppointments.slice(0, 2).map((apt) => (
                         <div
                           key={apt.id}
                           onClick={() => handleEditAppointment(apt)}
-                          className={`px-1 py-0.5 rounded text-xs cursor-pointer hover:shadow-sm transition-shadow truncate ${getDentistColor(apt.dentist_id)}`}
+                          className={`px-0.5 sm:px-1 py-0.5 rounded text-[9px] sm:text-xs cursor-pointer hover:shadow-sm active:scale-95 transition-all truncate ${getDentistColor(apt.dentist_id)}`}
                         >
-                          {format(new Date(apt.start_time), 'HH:mm')} {apt.patient.last_name}
+                          <span className="hidden sm:inline">{format(new Date(apt.start_time), 'HH:mm')} {apt.patient.last_name}</span>
+                          <span className="sm:hidden">{format(new Date(apt.start_time), 'HH:mm')}</span>
                         </div>
                       ))}
-                      {dayAppointments.length > 3 && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 px-1">
-                          +{dayAppointments.length - 3} more
+                      {dayAppointments.length > 2 && (
+                        <div className="text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 px-0.5 sm:px-1">
+                          +{dayAppointments.length - 2}
                         </div>
                       )}
                     </div>

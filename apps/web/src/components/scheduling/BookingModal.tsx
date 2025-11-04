@@ -186,19 +186,20 @@ export function BookingModal({
   }, [searchTerm]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-2 sm:p-4 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
               {existingAppointment ? 'Edit Appointment' : 'Book Appointment'}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2 -mr-2"
+              aria-label="Close"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -213,21 +214,21 @@ export function BookingModal({
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Date and Time Display */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Date & Time
               </label>
-              <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                {format(date, 'EEEE, MMMM d, yyyy')} at {hour.toString().padStart(2, '0')}:
-                {minute.toString().padStart(2, '0')}
+              <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                <div className="sm:hidden">{format(date, 'EEE, MMM d, yyyy')} at {hour.toString().padStart(2, '0')}:{minute.toString().padStart(2, '0')}</div>
+                <div className="hidden sm:block">{format(date, 'EEEE, MMMM d, yyyy')} at {hour.toString().padStart(2, '0')}:{minute.toString().padStart(2, '0')}</div>
               </div>
             </div>
 
             {/* Patient Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Patient *
               </label>
               <input
@@ -235,13 +236,13 @@ export function BookingModal({
                 placeholder="Search patients..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md mb-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-11 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md mb-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <select
                 value={selectedPatient}
                 onChange={(e) => setSelectedPatient(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-11 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">Select a patient</option>
                 {patients.map((patient) => (
@@ -254,14 +255,14 @@ export function BookingModal({
 
             {/* Doctor Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Doctor *
               </label>
               <select
                 value={selectedDentist}
                 onChange={(e) => setSelectedDentist(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-11 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">Select a doctor</option>
                 {dentists.map((dentist) => (
@@ -275,7 +276,7 @@ export function BookingModal({
 
             {/* Duration */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Duration *
               </label>
               <div className="flex gap-2">
@@ -283,7 +284,7 @@ export function BookingModal({
                   value={durationHours}
                   onChange={(e) => setDurationHours(e.target.value)}
                   required
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 h-11 px-2 sm:px-3 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {durationHourOptions.map((hour) => (
                     <option key={hour} value={hour}>
@@ -295,7 +296,7 @@ export function BookingModal({
                   value={durationMinutes}
                   onChange={(e) => setDurationMinutes(e.target.value)}
                   required
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 h-11 px-2 sm:px-3 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {durationMinuteOptions.map((minute) => (
                     <option key={minute} value={minute}>
@@ -308,14 +309,14 @@ export function BookingModal({
 
             {/* Appointment Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Appointment Type *
               </label>
               <select
                 value={appointmentType}
                 onChange={(e) => setAppointmentType(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-11 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">Select type</option>
                 <option value="checkup">Checkup</option>
@@ -331,13 +332,13 @@ export function BookingModal({
             {/* Status (only when editing) */}
             {existingAppointment && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                   Status
                 </label>
                 <select
                   value={appointmentStatus}
                   onChange={(e) => setAppointmentStatus(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full h-11 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="scheduled">Scheduled</option>
                   <option value="confirmed">Confirmed</option>
@@ -349,20 +350,20 @@ export function BookingModal({
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Notes
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Any additional notes..."
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-between pt-4">
+            <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-3 pt-3 sm:pt-4">
               {/* Delete button (only when editing) */}
               {existingAppointment && onDelete && (
                 <button
@@ -374,29 +375,33 @@ export function BookingModal({
                     }
                   }}
                   disabled={loading}
-                  className="px-6 py-2 text-sm font-medium text-white bg-red-600 dark:bg-red-500 rounded-md hover:bg-red-700 dark:hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 px-4 sm:px-6 text-sm font-medium text-white bg-red-600 dark:bg-red-500 rounded-md hover:bg-red-700 dark:hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform"
                 >
                   Cancel Appointment
                 </button>
               )}
 
-              <div className={`flex gap-3 ${existingAppointment && onDelete ? '' : 'ml-auto'}`}>
+              <div className={`flex gap-2 sm:gap-3 ${existingAppointment && onDelete ? '' : 'sm:ml-auto'}`}>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
+                  className="flex-1 sm:flex-none h-11 px-4 sm:px-6 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 transition-transform"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 sm:flex-none h-11 px-4 sm:px-6 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform"
                 >
-                  {loading
+                  <span className="hidden sm:inline">{loading
                     ? (existingAppointment ? 'Updating...' : 'Booking...')
                     : (existingAppointment ? 'Update Appointment' : 'Book Appointment')
-                  }
+                  }</span>
+                  <span className="sm:hidden">{loading
+                    ? (existingAppointment ? 'Updating...' : 'Booking...')
+                    : (existingAppointment ? 'Update' : 'Book')
+                  }</span>
                 </button>
               </div>
             </div>

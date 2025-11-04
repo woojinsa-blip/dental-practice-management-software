@@ -188,10 +188,10 @@ export function TimeSlotCell({
   });
 
   // Check if this is the first slot of an appointment
-  const isAppointmentStart = appointmentInSlot && appointments.find((apt) => {
-    const aptStart = new Date(apt.start_time);
+  const isAppointmentStart = appointmentInSlot && (() => {
+    const aptStart = new Date(appointmentInSlot.start_time);
     return aptStart.getHours() === hour && aptStart.getMinutes() === minute;
-  });
+  })();
 
   // Calculate appointment height (each 20 min = 60px)
   const getAppointmentHeight = (appointment: Appointment) => {

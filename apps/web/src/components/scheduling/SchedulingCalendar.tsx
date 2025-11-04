@@ -296,9 +296,9 @@ export function SchedulingCalendar() {
       const appointment = appointments.find((apt) => apt.id === appointmentId);
       if (!appointment) return;
 
-      const start = new Date(appointment.start_time);
-      const newEnd = new Date(start);
-      newEnd.setMinutes(newEnd.getMinutes() + newDurationMinutes);
+      // Calculate new end time by adding duration to original start time in milliseconds
+      const startTime = new Date(appointment.start_time).getTime();
+      const newEndTime = new Date(startTime + newDurationMinutes * 60 * 1000);
 
       const res = await fetch('/api/appointments', {
         method: 'PUT',
@@ -308,8 +308,8 @@ export function SchedulingCalendar() {
           patient_id: appointment.patient_id,
           dentist_id: appointment.dentist_id,
           operatory_id: appointment.operatory_id,
-          start_time: start.toISOString(),
-          end_time: newEnd.toISOString(),
+          start_time: appointment.start_time, // Keep original start time unchanged
+          end_time: newEndTime.toISOString(),
           type: appointment.type,
           notes: appointment.notes,
           status: appointment.status,

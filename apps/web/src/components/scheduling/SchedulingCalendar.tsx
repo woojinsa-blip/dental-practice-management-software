@@ -118,9 +118,19 @@ export function SchedulingCalendar() {
     try {
       const res = await fetch('/api/dentists');
       const data = await res.json();
-      setDentists(data);
+
+      // Handle error response
+      if (!res.ok || data.error) {
+        console.error('Error fetching dentists:', data.error);
+        setDentists([]);
+        return;
+      }
+
+      // Ensure data is an array
+      setDentists(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching dentists:', error);
+      setDentists([]);
     }
   }
 

@@ -208,9 +208,9 @@ export function TimeSlotCell({
           ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500 ring-inset'
           : appointmentInSlot
           ? 'hover:bg-gray-50 dark:hover:bg-gray-700/20'
-          : 'hover:bg-blue-50 dark:hover:bg-blue-900/10 cursor-pointer'
+          : 'hover:bg-blue-50 dark:hover:bg-blue-900/10 cursor-pointer active:bg-blue-100 dark:active:bg-blue-900/20'
       }`}
-      style={{ height: '60px', minWidth: '150px' }}
+      style={{ height: '60px', minWidth: '140px', width: '140px' }}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -242,46 +242,56 @@ export function TimeSlotCell({
               onEditAppointment(appointmentInSlot);
             }
           }}
-          className={`absolute inset-x-0 top-0 mx-1 mt-1 p-2 rounded-md shadow-md hover:shadow-lg text-xs overflow-hidden transition-all border-l-4 ${
-            isDragging ? 'opacity-50 z-0 cursor-grabbing' : 'opacity-100 z-10 cursor-grab'
+          className={`absolute top-0 left-0 right-0 mt-0.5 sm:mt-1 mx-1 p-1.5 sm:p-2 rounded-md shadow-md hover:shadow-lg text-[10px] sm:text-xs overflow-hidden transition-all border-l-2 sm:border-l-4 ${
+            isDragging ? 'opacity-50 z-0 cursor-grabbing' : 'opacity-100 z-10 cursor-grab active:scale-[0.98]'
           } ${getDentistColor(appointmentInSlot.dentist_id)}`}
           style={{ height: `${getAppointmentHeight(appointmentInSlot) - 8}px` }}
         >
-          {/* Drag handle indicator */}
-          <div className="absolute top-2 right-2 opacity-50 hover:opacity-100 transition-opacity">
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+          {/* Drag handle indicator - hidden on mobile, show on hover on desktop */}
+          <div className="hidden sm:block absolute top-1.5 sm:top-2 right-1.5 sm:right-2 opacity-50 hover:opacity-100 transition-opacity">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="currentColor" viewBox="0 0 20 20">
               <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z" />
             </svg>
           </div>
 
-          <div className="font-semibold truncate pr-6">
+          <div className="font-semibold truncate pr-4 sm:pr-6">
             {appointmentInSlot.patient.first_name} {appointmentInSlot.patient.last_name}
           </div>
-          <div className="text-xs opacity-90 truncate">
+          <div className="text-[10px] sm:text-xs opacity-90 truncate">
             Dr. {appointmentInSlot.dentist.last_name}
           </div>
-          <div className="text-xs opacity-75 truncate">{appointmentInSlot.type}</div>
-          <div className="text-xs opacity-75">
+          <div className="text-[10px] sm:text-xs opacity-75 truncate hidden sm:block">{appointmentInSlot.type}</div>
+          <div className="text-[10px] sm:text-xs opacity-75">
             {format(new Date(appointmentInSlot.start_time), 'HH:mm')} -{' '}
             {format(new Date(appointmentInSlot.end_time), 'HH:mm')}
           </div>
 
-          {/* Enhanced Resize handle with better visibility */}
+          {/* Enhanced Resize handle - larger touch target on mobile */}
           <div
             onMouseDown={(e) => handleResizeStart(e, appointmentInSlot)}
-            className={`absolute bottom-0 left-0 right-0 cursor-ns-resize flex items-center justify-center transition-all ${
-              isResizing ? 'bg-blue-500/30 dark:bg-blue-400/30 h-8' : 'h-6 hover:bg-black/10 dark:hover:bg-white/10'
+            onTouchStart={(e) => {
+              // Convert touch to mouse event for mobile
+              const touch = e.touches[0];
+              const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                bubbles: true
+              });
+              handleResizeStart(mouseEvent as any, appointmentInSlot);
+            }}
+            className={`absolute bottom-0 left-0 right-0 cursor-ns-resize touch-none flex items-center justify-center transition-all ${
+              isResizing ? 'bg-blue-500/30 dark:bg-blue-400/30 h-10 sm:h-8' : 'h-8 sm:h-6 hover:bg-black/10 dark:hover:bg-white/10'
             }`}
             title="Drag to resize appointment duration"
           >
             <div className={`rounded transition-all ${
               isResizing
-                ? 'w-16 h-1.5 bg-blue-600 dark:bg-blue-400'
-                : 'w-12 h-1 bg-gray-500 dark:bg-gray-400 group-hover:w-16 group-hover:h-1.5'
+                ? 'w-16 sm:w-16 h-1.5 bg-blue-600 dark:bg-blue-400'
+                : 'w-14 sm:w-12 h-1 sm:h-1 bg-gray-500 dark:bg-gray-400 group-hover:w-16 group-hover:h-1.5'
             }`}></div>
             {/* Resize icon */}
             <div className="absolute right-2 opacity-50">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V8m10 8V8" />
               </svg>
             </div>

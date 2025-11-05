@@ -92,6 +92,13 @@ export function SchedulingCalendar() {
   const [loading, setLoading] = useState(true);
   const [dentistColorMap, setDentistColorMap] = useState<Record<string, string>>({});
   const [draggedAppointmentId, setDraggedAppointmentId] = useState<string | null>(null);
+  const [touchDragInfo, setTouchDragInfo] = useState<{
+    appointmentId: string;
+    startX: number;
+    startY: number;
+    currentX: number;
+    currentY: number;
+  } | null>(null);
 
   const timeSlots = generateTimeSlots();
 
@@ -417,6 +424,56 @@ export function SchedulingCalendar() {
     });
   }
 
+  // Touch event handlers for mobile drag & drop
+  function handleTouchStart(e: React.TouchEvent, appointmentId: string) {
+    const touch = e.touches[0];
+    setTouchDragInfo({
+      appointmentId,
+      startX: touch.clientX,
+      startY: touch.clientY,
+      currentX: touch.clientX,
+      currentY: touch.clientY,
+    });
+    setDraggedAppointmentId(appointmentId);
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (!touchDragInfo) return;
+
+    const touch = e.touches[0];
+    setTouchDragInfo({
+      ...touchDragInfo,
+      currentX: touch.clientX,
+      currentY: touch.clientY,
+    });
+
+    // Prevent scrolling while dragging
+    e.preventDefault();
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (!touchDragInfo) return;
+
+    const touch = e.changedTouches[0];
+    const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    // Find the day cell/column that was dropped on
+    const dayCell = elementAtPoint?.closest('[data-drop-date]') as HTMLElement;
+
+    if (dayCell && dayCell.dataset.dropDate) {
+      const dropDate = new Date(dayCell.dataset.dropDate);
+      handleDropAppointmentOnDate(touchDragInfo.appointmentId, dropDate);
+    }
+
+    setTouchDragInfo(null);
+    setDraggedAppointmentId(null);
+  }
+
+  function handleTouchCancel() {
+    setTouchDragInfo(null);
+    setDraggedAppointmentId(null);
+  }
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
       {/* Header Controls */}
@@ -609,6 +666,7 @@ export function SchedulingCalendar() {
                 <div
                   key={day.toISOString()}
                   className="bg-white dark:bg-gray-800 min-h-[300px] sm:min-h-[500px]"
+                  data-drop-date={day.toISOString()}
                   onDragOver={(e) => {
                     e.preventDefault();
                     e.currentTarget.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
@@ -671,10 +729,33 @@ export function SchedulingCalendar() {
                           onDragEnd={() => {
                             setDraggedAppointmentId(null);
                           }}
-                          onClick={() => handleEditAppointment(apt)}
+                          onTouchStart={(e) => {
+                            handleTouchStart(e, apt.id);
+                          }}
+                          onTouchMove={handleTouchMove}
+                          onTouchEnd={handleTouchEnd}
+                          onTouchCancel={handleTouchCancel}
+                          onClick={(e) => {
+                            // Only trigger edit if not dragging
+                            if (!touchDragInfo) {
+                              handleEditAppointment(apt);
+                            }
+                          }}
                           className={`p-1.5 sm:p-2 rounded text-[10px] sm:text-xs cursor-move hover:shadow-md active:scale-95 transition-all ${
                             draggedAppointmentId === apt.id ? 'opacity-50' : ''
                           } ${getDentistColor(apt.dentist_id)}`}
+                          style={
+                            touchDragInfo?.appointmentId === apt.id
+                              ? {
+                                  position: 'fixed',
+                                  left: touchDragInfo.currentX - 50,
+                                  top: touchDragInfo.currentY - 20,
+                                  zIndex: 9999,
+                                  pointerEvents: 'none',
+                                  width: '120px',
+                                }
+                              : undefined
+                          }
                         >
                           <div className="font-semibold truncate">
                             {format(new Date(apt.start_time), 'HH:mm')} - {apt.patient.first_name} {apt.patient.last_name}
@@ -721,6 +802,7 @@ export function SchedulingCalendar() {
                   <div
                     key={day.toISOString()}
                     className="bg-white dark:bg-gray-800 min-h-[80px] sm:min-h-[120px] p-1 sm:p-2"
+                    data-drop-date={day.toISOString()}
                     onDragOver={(e) => {
                       e.preventDefault();
                       e.currentTarget.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
@@ -773,10 +855,33 @@ export function SchedulingCalendar() {
                           onDragEnd={() => {
                             setDraggedAppointmentId(null);
                           }}
-                          onClick={() => handleEditAppointment(apt)}
+                          onTouchStart={(e) => {
+                            handleTouchStart(e, apt.id);
+                          }}
+                          onTouchMove={handleTouchMove}
+                          onTouchEnd={handleTouchEnd}
+                          onTouchCancel={handleTouchCancel}
+                          onClick={(e) => {
+                            // Only trigger edit if not dragging
+                            if (!touchDragInfo) {
+                              handleEditAppointment(apt);
+                            }
+                          }}
                           className={`px-1 py-0.5 rounded text-[10px] sm:text-xs cursor-move hover:shadow-sm active:scale-95 transition-all truncate ${
                             draggedAppointmentId === apt.id ? 'opacity-50' : ''
                           } ${getDentistColor(apt.dentist_id)}`}
+                          style={
+                            touchDragInfo?.appointmentId === apt.id
+                              ? {
+                                  position: 'fixed',
+                                  left: touchDragInfo.currentX - 50,
+                                  top: touchDragInfo.currentY - 20,
+                                  zIndex: 9999,
+                                  pointerEvents: 'none',
+                                  width: '100px',
+                                }
+                              : undefined
+                          }
                         >
                           <span className="hidden sm:inline">{format(new Date(apt.start_time), 'HH:mm')} {apt.patient.last_name}</span>
                           <span className="sm:hidden">{format(new Date(apt.start_time), 'HH:mm')}</span>

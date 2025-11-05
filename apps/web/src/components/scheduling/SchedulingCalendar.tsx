@@ -91,6 +91,7 @@ export function SchedulingCalendar() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [dentistColorMap, setDentistColorMap] = useState<Record<string, string>>({});
+  const [draggedAppointmentId, setDraggedAppointmentId] = useState<string | null>(null);
 
   const timeSlots = generateTimeSlots();
 
@@ -271,6 +272,60 @@ export function SchedulingCalendar() {
           patient_id: appointment.patient_id,
           dentist_id: appointment.dentist_id,
           operatory_id: operatoryId,
+          start_time: newStart.toISOString(),
+          end_time: newEnd.toISOString(),
+          type: appointment.type,
+          notes: appointment.notes,
+          status: appointment.status,
+        }),
+      });
+
+      if (res.ok) {
+        fetchAppointments();
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Failed to move appointment');
+      }
+    } catch (error) {
+      console.error('Error moving appointment:', error);
+      alert('Failed to move appointment');
+    }
+  }
+
+  async function handleDropAppointmentOnDate(appointmentId: string, newDate: Date) {
+    try {
+      const appointment = appointments.find((apt) => apt.id === appointmentId);
+      if (!appointment) {
+        alert('Appointment not found');
+        return;
+      }
+
+      const originalStart = new Date(appointment.start_time);
+      const originalEnd = new Date(appointment.end_time);
+      const duration = (originalEnd.getTime() - originalStart.getTime()) / (1000 * 60);
+
+      // Keep the same time of day, but change the date
+      const newStart = new Date(
+        newDate.getFullYear(),
+        newDate.getMonth(),
+        newDate.getDate(),
+        originalStart.getHours(),
+        originalStart.getMinutes(),
+        0,
+        0
+      );
+
+      const newEnd = new Date(newStart);
+      newEnd.setMinutes(newEnd.getMinutes() + duration);
+
+      const res = await fetch('/api/appointments', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: appointmentId,
+          patient_id: appointment.patient_id,
+          dentist_id: appointment.dentist_id,
+          operatory_id: appointment.operatory_id, // Keep the same operatory
           start_time: newStart.toISOString(),
           end_time: newEnd.toISOString(),
           type: appointment.type,
@@ -551,7 +606,25 @@ export function SchedulingCalendar() {
               });
 
               return (
-                <div key={day.toISOString()} className="bg-white dark:bg-gray-800 min-h-[300px] sm:min-h-[500px]">
+                <div
+                  key={day.toISOString()}
+                  className="bg-white dark:bg-gray-800 min-h-[300px] sm:min-h-[500px]"
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
+                  }}
+                  onDragLeave={(e) => {
+                    e.currentTarget.classList.remove('bg-blue-50', 'dark:bg-blue-900/20');
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove('bg-blue-50', 'dark:bg-blue-900/20');
+                    if (draggedAppointmentId) {
+                      handleDropAppointmentOnDate(draggedAppointmentId, day);
+                      setDraggedAppointmentId(null);
+                    }
+                  }}
+                >
                   <div className="sticky top-0 bg-gray-50 dark:bg-gray-900 p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700 z-10">
                     <div className="text-center">
                       <div className="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
@@ -580,8 +653,28 @@ export function SchedulingCalendar() {
                       dayAppointments.map((apt) => (
                         <div
                           key={apt.id}
+                          draggable
+                          onDragStart={(e) => {
+                            e.stopPropagation();
+                            setDraggedAppointmentId(apt.id);
+                            e.dataTransfer.effectAllowed = 'move';
+                            // Create drag image with patient name
+                            const dragImage = document.createElement('div');
+                            dragImage.className = 'px-3 py-2 bg-blue-600 text-white rounded shadow-lg';
+                            dragImage.textContent = `${apt.patient.first_name} ${apt.patient.last_name}`;
+                            dragImage.style.position = 'absolute';
+                            dragImage.style.top = '-1000px';
+                            document.body.appendChild(dragImage);
+                            e.dataTransfer.setDragImage(dragImage, 0, 0);
+                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                          }}
+                          onDragEnd={() => {
+                            setDraggedAppointmentId(null);
+                          }}
                           onClick={() => handleEditAppointment(apt)}
-                          className={`p-1.5 sm:p-2 rounded text-[10px] sm:text-xs cursor-pointer hover:shadow-md active:scale-95 transition-all ${getDentistColor(apt.dentist_id)}`}
+                          className={`p-1.5 sm:p-2 rounded text-[10px] sm:text-xs cursor-move hover:shadow-md active:scale-95 transition-all ${
+                            draggedAppointmentId === apt.id ? 'opacity-50' : ''
+                          } ${getDentistColor(apt.dentist_id)}`}
                         >
                           <div className="font-semibold truncate">
                             {format(new Date(apt.start_time), 'HH:mm')} - {apt.patient.first_name} {apt.patient.last_name}
@@ -628,6 +721,21 @@ export function SchedulingCalendar() {
                   <div
                     key={day.toISOString()}
                     className="bg-white dark:bg-gray-800 min-h-[80px] sm:min-h-[120px] p-1 sm:p-2"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
+                    }}
+                    onDragLeave={(e) => {
+                      e.currentTarget.classList.remove('bg-blue-50', 'dark:bg-blue-900/20');
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.remove('bg-blue-50', 'dark:bg-blue-900/20');
+                      if (draggedAppointmentId) {
+                        handleDropAppointmentOnDate(draggedAppointmentId, day);
+                        setDraggedAppointmentId(null);
+                      }
+                    }}
                   >
                     <div className="flex items-center justify-between mb-1 sm:mb-2">
                       <div className={`text-xs sm:text-sm font-semibold ${
@@ -647,8 +755,28 @@ export function SchedulingCalendar() {
                       {dayAppointments.slice(0, 2).map((apt) => (
                         <div
                           key={apt.id}
+                          draggable
+                          onDragStart={(e) => {
+                            e.stopPropagation();
+                            setDraggedAppointmentId(apt.id);
+                            e.dataTransfer.effectAllowed = 'move';
+                            // Create drag image with patient name
+                            const dragImage = document.createElement('div');
+                            dragImage.className = 'px-3 py-2 bg-blue-600 text-white rounded shadow-lg';
+                            dragImage.textContent = `${apt.patient.first_name} ${apt.patient.last_name}`;
+                            dragImage.style.position = 'absolute';
+                            dragImage.style.top = '-1000px';
+                            document.body.appendChild(dragImage);
+                            e.dataTransfer.setDragImage(dragImage, 0, 0);
+                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                          }}
+                          onDragEnd={() => {
+                            setDraggedAppointmentId(null);
+                          }}
                           onClick={() => handleEditAppointment(apt)}
-                          className={`px-1 py-0.5 rounded text-[10px] sm:text-xs cursor-pointer hover:shadow-sm active:scale-95 transition-all truncate ${getDentistColor(apt.dentist_id)}`}
+                          className={`px-1 py-0.5 rounded text-[10px] sm:text-xs cursor-move hover:shadow-sm active:scale-95 transition-all truncate ${
+                            draggedAppointmentId === apt.id ? 'opacity-50' : ''
+                          } ${getDentistColor(apt.dentist_id)}`}
                         >
                           <span className="hidden sm:inline">{format(new Date(apt.start_time), 'HH:mm')} {apt.patient.last_name}</span>
                           <span className="sm:hidden">{format(new Date(apt.start_time), 'HH:mm')}</span>
